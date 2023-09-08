@@ -79,3 +79,47 @@ class Solution:
 
         return False
 ```
+
+## Minimum Window Substring
+[! Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
+key point:
+1. Use two pointers: start and end to represent a window.
+2. Move end to find a valid window.
+3. When a valid window is found, move start to find a smaller window.
+
+```python
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        countT = Counter(t)
+        
+        # initialize
+        countS = {}
+        l, r = 0, 0
+        minl = float('infinity')
+        res = ""
+        have, need = 0, len(countT.keys())
+        while r < len(s):
+            # # update S table, we don't need to store other character
+            if s[r] in countT:
+                countS[s[r]] = countS.get(s[r], 0) + 1
+                # update have only when the count match exactly, which means:
+                # after updateing we just complete a task that is not finished before
+                if countS[s[r]] == countT[s[r]]:
+                    have +=1
+                # after updating the table check whether ths substring is valide
+                while have == need:
+                    # check and update minl and res if necessary
+                    if r-l+1 < minl:
+                        minl = min(minl, r-l+1)
+                        res = s[l:r+1]
+                    # update left side of the window
+                    if s[l] in countT:
+                        countS[s[l]] -= 1
+                        # update have
+                        if countS[s[l]] < countT[s[l]]:
+                            have -= 1
+                    
+                    l += 1
+            r += 1
+        return res
+```
