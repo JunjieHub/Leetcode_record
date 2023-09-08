@@ -123,3 +123,40 @@ class Solution:
             r += 1
         return res
 ```
+
+## Sliding Window Maximum
+[! Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
+key point: use a deque to store the index of the maximum value in the current window, and the index of the maximum value is always at the left of the deque. 
+```python
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        # important: deq store the index instead of value because access value from
+        # index is constant time and we need index to decide whether the left side of
+        # the window has removed our  previous largest element
+        deq = collections.deque()
+        res = []
+        l, r = 0, 0
+        while r < len(nums):
+            # pop the queue until decreasing property is maintained
+            while deq and nums[deq[-1]]< nums[r]:
+                deq.pop()
+            # append the element
+            deq.append(r)
+
+            # decide whether we need to remove the left side of deq if it
+            # is no longer within the sliding window
+
+            if deq[0] < l:
+                deq.popleft()
+
+            # get res after reaching to the window size
+            if r-l+1 == k:
+                res.append(nums[deq[0]])
+                l += 1
+            r += 1
+        return res
+            
+
+```
+
+
