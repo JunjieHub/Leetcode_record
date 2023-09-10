@@ -155,8 +155,46 @@ class Solution:
                 l += 1
             r += 1
         return res
-            
-
 ```
 
+## Min stack
+[! Min stack](https://leetcode.com/problems/min-stack/)
+key point: A trick, preserving stack it self and also a min stack so we can access min value with constant complexity
+```python
+class MinStack:
 
+    def __init__(self):
+        self.stack = []
+        self.stack_min = []
+        
+
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        if not self.stack_min:
+            self.stack_min.append(val)
+        else:
+            if val < self.stack_min[-1]:
+                self.stack_min.append(val)
+            else:
+                self.stack_min.append(self.stack_min[-1])
+
+    def pop(self) -> None:
+        self.stack.pop()
+        self.stack_min.pop()
+
+
+    def top(self) -> int:
+        return self.stack[-1]
+        
+
+    def getMin(self) -> int:
+        return self.stack_min[-1] if self.stack else None
+
+
+# Your MinStack object will be instantiated and called as such:
+# obj = MinStack()
+# obj.push(val)
+# obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.getMin()
+```
