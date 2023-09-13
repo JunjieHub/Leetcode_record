@@ -277,3 +277,175 @@ class Solution:
         return res
 ```
 
+## The following are examples for backtracking using template
+## Subsets
+[! Subsets](https://leetcode.com/problems/subsets/)
+key point: backtracking
+```python
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        solutions = []
+        state = []
+        self.search(state, solutions, nums)
+        return solutions
+    
+    def is_valid_state(slef, state, nums):
+        if not state:
+            return True
+        else:
+            return state[-1]<len(nums)
+
+    def get_candidates(self, state, solutions, nums):
+        if not state:
+            # all elements can be candidate
+            candidates = range(len(nums))
+        elif state[-1] == len(nums)-1:
+            candidates = []
+        else:
+            candidates = [i for i in range(state[-1]+1, len(nums))]
+        return candidates
+
+    def search(self, state, solutions, nums):
+        if self.is_valid_state(state, nums):
+            
+            solutions.append([nums[i] for i in state])
+
+        for candidate in self.get_candidates(state, solutions, nums):
+            state.append(candidate)
+            self.search(state, solutions, nums)
+            state.pop()
+```
+
+## Combination Sum
+[! Combination Sum](https://leetcode.com/problems/combination-sum/)
+
+```python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        solutions = []
+        state = [] # store index
+        self.search(state, solutions, candidates, target)
+        return solutions
+     
+    def is_valid_state(self, state, target, candidates):
+        # print('state', state)
+        if not state:
+            return False
+        else:
+            return sum([candidates[i] for i in state]) == target
+
+    def get_candidates(self, state, candidates, target):
+        if not state:
+            remain = target
+            cand = range(len(candidates))
+        else:
+            remain = target - sum([candidates[i] for i in state])
+            cand = [i for i in range(state[-1], len(candidates)) if candidates[i] <= remain]
+        # print('cand', cand)
+        return cand
+
+    def search(self, state, solutions, candidates, target):
+        if self.is_valid_state(state, target, candidates):
+            # print('valid')
+            temp = [candidates[i] for i in state]
+            solutions.append(temp)
+        
+        for candidate in self.get_candidates(state, candidates, target):
+            # print(state)
+            state.append(candidate)
+            self.search(state, solutions, candidates, target)
+            state.pop()
+```
+
+## Permutations
+[! Permutations](https://leetcode.com/problems/permutations/)
+```python
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        solutions = []
+        state = []
+        remain = set(nums)
+        self.search(state, solutions, remain, nums)
+        return solutions
+
+
+    def is_valid_state(self, state, nums):
+        return len(state) == len(nums)
+
+    def get_candidates(self, remain):
+        candidates = list(remain)
+        return candidates
+
+    def search(self, state, solutions, remain, nums):
+        if self.is_valid_state(state, nums):
+            solutions.append(list(state.copy()))
+
+        for c in self.get_candidates(remain):
+            state.append(c)
+            remain.discard(c)
+            self.search(state,solutions, remain, nums)
+            state.pop()
+            remain.add(c)
+```
+## Subsets II
+[! Subsets II](https://leetcode.com/problems/subsets-ii/)
+```python
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        sorted_nums = sorted(nums)
+        solutions = []
+        state = []
+        self.search(state, solutions, sorted_nums)
+        return solutions
+
+
+
+    def is_valid_state(self, state, nums):
+        # print(state)
+        # print(nums)
+        return len(state)<=len(nums)
+
+    def get_candidates(self, state, solutions, nums):
+        if not state:
+            candidates = range(len(nums))
+        elif state[-1] == len(nums)-1:
+            candidates = []
+        else:
+            # print(state)
+            candidates = [i for i in range(state[-1]+1, len(nums))]
+            # print('candidates',candidates)
+        print('candidates', candidates)
+        return candidates
+
+    def search(self, state, solutions, nums):
+        # print(state)
+        if self.is_valid_state(state, nums):
+            temp = [nums[i] for i in state]
+            if temp not in solutions: ## this part is very ineffcient but I don't know how to improve it
+                solutions.append(temp)
+        
+        for c in self.get_candidates(state, solutions, nums):
+                state.append(c)
+                self.search(state, solutions, nums)
+                state.pop()
+```
+
+
+
+
+
+        
+
+
+        
+
+
+
+
+
+
+        
+
+
+
+
