@@ -429,6 +429,40 @@ class Solution:
                 self.search(state, solutions, nums)
                 state.pop()
 ```
+A more concise solution:
+
+```python
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        def backtrack(state, solutions, cur_ind):
+
+            for i in range(cur_ind, len(nums)):
+                if i > cur_ind and nums[i] == nums[i-1]:
+                    continue
+
+                state.append(nums[i])
+                backtrack(state, solutions, i+1)
+                state.pop()
+            solutions.append(state.copy())
+
+        nums.sort()
+        state, solutions = [], []
+        backtrack(state, solutions, 0)
+        return solutions
+```
+
+
+
+Note:
+The template is clean but my be overcomplicated, especillay a lot self and arguments need to be written for the helper function. Now I understand the general architecture of backtracking, I can write it in a more concise way.
+for backtrack, we
+1) check whether current state is valid, if true, add state to solutions, the state must be a deep copy of the current state, otherwise, it will be changed when the state is changed.
+2) get candidates for next state, usually using for loop and if condition for filtering
+3) for each candidate, add it to state, and call backtrack function recursively and then pop it out of the state.
+
+
+
+
 
 
 
