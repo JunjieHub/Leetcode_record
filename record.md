@@ -388,7 +388,7 @@ class Solution:
             remain.add(c)
 ```
 ## Subsets II
-[! Subsets II](https://leetcode.com/problems/subsets-ii/)
+[Subsets II](https://leetcode.com/problems/subsets-ii/)
 ```python
 class Solution:
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
@@ -460,6 +460,181 @@ for backtrack, we
 2) get candidates for next state, usually using for loop and if condition for filtering
 3) for each candidate, add it to state, and call backtrack function recursively and then pop it out of the state.
 
+## Combination Sum II
+[Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)
+```python
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        
+        def backtrack(state, remain, cur_ind, solutions):
+
+            if remain == 0:
+                solutions.append(list(state))
+                return
+
+            for i in range(cur_ind, len(candidates)):
+
+                if i > cur_ind and candidates[i] == candidates[i-1]:
+                    continue
+
+                if remain - candidates[i] < 0:
+                    break
+
+                state.append(candidates[i])
+                backtrack(state, remain-candidates[i], i+1, solutions)
+                state.pop()
+
+        candidates.sort()
+        state, solutions = [],[]
+        backtrack(state, target, 0, solutions)
+        return solutions
+```
+key points: use 'continue' and 'break' to prune the search tree for consice code.
+
+## Word Search
+[Word Search](https://leetcode.com/problems/word-search/)
+```python
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        
+        m, n = len(board), len(board[0])
+
+        def dfs(state, visited, i, j):
+            # print('state', state)
+            if ''.join(state) == word:
+            if (min(i, j) < 0
+                or i >= m
+                or j >= n
+                or word[len(state)] != board[i][j]
+                or (i,j) in visited):
+                return False
+            
+
+            state.append(board[i][j])
+            visited.add((i,j))
+            found = False
+            for move in [(-1,0), (1,0), (0,-1), (0,1)]:
+                visited.add((i,j)+move)
+                found = found or dfs(state, visited, i+move[0],j+move[1])
+            state.pop()
+            visited.remove((i,j))
+            return found
+
+        count = defaultdict(int, sum(map(Counter, board), Counter()))
+        if count[word[0]] > count[word[-1]]:
+            word = word[::-1]
+            
+        for i in range(m):
+            for j in range(n):
+                state = []
+                visited = set()
+                if dfs(state, visited, i, j):
+                    return True
+        return False
+```
+key point: understand difference between dfs and backtracking later
+
+## Letter Combinations of a Phone Number
+[Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)
+```python
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+
+        DSmap = {
+            '2': ['a', 'b','c'],
+            '3': ['d','e','f'],
+            '4': ['g','h','i'],
+            '5': ['j','k','l'],
+            '6':['m','n','o'],
+            '7': ['p','q','r','s'],
+            '8': ['t','u','v'],
+            '9': ['w','x','y','z']
+        }
+        
+    
+        def is_valid_state(state):
+            if len(state) == len(digits):
+                return True
+                res.append(state.copy())
+        
+        def get_candidates(res, state):
+            if len(state) == len(digits):
+                return []
+            else:
+                d = digits[len(state)]
+                return DSmap[d]
+
+        def search(res, state):
+            if is_valid_state(state):
+                temp = state.copy()
+                res.append(''.join(temp))
+
+            for c in get_candidates(res, state):
+                state.append(c)
+                search(res, state)
+                state.pop()
+
+        if digits == "":
+            return []
+        else:
+            res = []
+            state = []
+            search(res,state)
+            return res
+```
+key point: this is an example show the backtracking template can really be helpful to finish the code quickly without thinking too much about the details, even though the solution may not be very concise.
+
+
+## The following are examples of binary search
+
+## Find Minimum in Rotated Sorted Array
+[Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+```python
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        l,r = 0, len(nums)-1
+        while l<r:
+            mid = (l+r)//2
+            if nums[mid]>nums[r]:
+                # left part is sorted
+                l  = mid + 1
+            else:
+                # right part is sorted
+                r = mid
+        return nums[r]
+```
+Key points:
+the appraoch is easy to understand, however, edge case can be very annoying
+see https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/solutions/158940/beat-100-very-simple-python-very-detailed-explanation/ for more details
+
+## Search in Rotated Sorted Array
+[Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+```python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        l, r = 0, len(nums)-1
+        while l<=r:
+            mid = (l+r)//2
+
+            if nums[mid] == target:
+                return mid
+
+            if nums[l] <= nums[mid]:
+                # left part is sorted
+                if target>nums[mid] or target<nums[l]:
+                    l = mid+1
+                else:
+                    r = mid - 1
+            else:
+                if target>nums[r] or target<nums[mid]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+
+        return -1
+```
+keypoint:
+same as above, edge case is annoying
 
 
 
