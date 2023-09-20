@@ -636,6 +636,99 @@ class Solution:
 keypoint:
 same as above, edge case is annoying
 
+## Linked List examples
+ 
+## reverse linked list
+[reverse linked list](https://leetcode.com/problems/reverse-linked-list/)
+
+## merge two sorted lists
+[merge two sorted lists](https://leetcode.com/problems/merge-two-sorted-lists/)
+
+The above two easy problems are good examples to understand the structure.
+
+## reorder list
+[reorder list](https://leetcode.com/problems/reorder-list/)
+
+appraoch 1: store the node in an array, more straightforward but requir O(n) space
+```python
+class Solution:
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        # store all node in am array
+        node_arr = deque()
+        dummy = head
+        while head:
+            node_arr.append(head)
+            head = head.next
+        head = dummy
+
+        l, r = 0, len(node_arr)-1
+
+        prev = head
+        while l<r:
+            node_arr[l].next = node_arr[r]
+            l += 1
+
+            if l == r:
+                prev = node_arr[r]
+                break
+
+            node_arr[r].next = node_arr[l]
+            r -= 1
+
+            prev = node_arr[l]
+
+        prev.next = None
+```
+
+approach 2: find the middle node, reverse the second half, merge the two lists.
+
+Tip: using slow and fast pointer to find the middle node is a useful trick
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+
+class Solution:
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        # find the node that split the linked list half-half
+        slow, fast = head, head.next
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        mid = slow
+        # for odd, mid is the center, for even number, mid is that last node of the first half
+
+        # reverse the second half
+        # for consistency, we include the mid as the first half for odd number
+
+        # break the part
+        right = mid.next
+        mid.next = None
+        prev = None
+
+        while right:
+            tmp = right.next
+            right.next = prev
+            prev = right
+            right = tmp
+
+        # merge the two linked list
+        left, right = head, prev
+        while right:
+            tmp1, tmp2 = left.next, right.next
+            left.next = right
+            right.next = tmp1
+            left, right = tmp1, tmp2
+```
+
+
+
+
 
 
 
