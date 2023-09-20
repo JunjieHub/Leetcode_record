@@ -725,6 +725,37 @@ class Solution:
             right.next = tmp1
             left, right = tmp1, tmp2
 ```
+## remove Nth node from end of list
+[remove Nth node from end of list](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+
+key point: 
+1) using sliding window to find the node to be removed
+2) using dummy node and return dummy.next to avoid edge case
+
+```python
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+
+        # get the length of linked list
+        dummy = ListNode(0, next = head)
+        
+        l = dummy
+        r = head
+        # update r until offset n is meet
+        while n>0:
+            r = r.next
+            n -= 1
+
+        # slinding window
+        while r:
+            l = l.next
+            r = r.next
+
+        # skip
+        l.next = l.next.next
+
+        return dummy.next
+```
 
 
 
