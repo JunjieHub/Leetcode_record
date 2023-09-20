@@ -756,6 +756,112 @@ class Solution:
 
         return dummy.next
 ```
+## copy list with random pointer
+[copy list with random pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+```python
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        
+        # initialize all the node with a hashmap to store the link relationship
+
+        oldTocopy = {None: None}
+
+        cur = head
+        while cur:
+            # create a new node
+            temp_node = Node(cur.val)          
+            oldTocopy[cur] = temp_node
+            cur = cur.next
+
+        cur = head
+        while cur:
+            copy = oldTocopy[cur]
+            copy.next = oldTocopy[cur.next]
+            copy.random = oldTocopy[cur.random]
+            cur = cur.next
+        
+        return oldTocopy[head]
+```
+key point: using hashmap to link old node and new node, complete the task with two pass, the first pass is to create all the new node, the second pass is to assign relationship between the new node.
+
+## add two numbers
+[add two numbers](https://leetcode.com/problems/add-two-numbers/)
+```python
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        
+        dummy = ListNode()
+        cur = dummy
+        carry = 0
+        while l1 or l2:
+            v1 = l1.val if l1 else 0
+            v2 = l2.val if l2 else 0
+            if carry != 0:
+                cur_val = v1 + v2 + carry
+                # reset carry
+                carry = 0
+            else:
+                cur_val = v1 + v2
+
+            tmp_node = ListNode()
+            if cur_val<10:
+                tmp_node.val = cur_val
+            else:
+                tmp_node.val = cur_val % 10
+                carry = 1
+            cur.next = tmp_node
+            cur = cur.next
+
+            l1 = l1.next if l1 else None
+            l2 = l2.next if l2 else None
+
+        # edge case
+        if carry == 1:
+            cur.next = ListNode(carry)
+
+        return dummy.next
+```
+key point: use a carry to store the value if the sum is greater than 10
+trick:
+```python
+v1 = l1.val if l1 else 0
+v2 = l2.val if l2 else 0
+```
+assign 0 to node that is None, nice to address edge case
+
+similarily
+```python
+1 = l1.next if l1 else None
+l2 = l2.next if l2 else None
+```
+move to None instead of next of next doesn't exist
+
+## find duplicate number
+[find duplicate number](https://leetcode.com/problems/find-the-duplicate-number/)
+```python
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        # Floyd algorithm for loop detection
+        slow, fast = 0, 0
+        while True:
+            slow = nums[slow]
+            fast = nums[nums[fast]] # move one step forward
+            if slow == fast:
+                # intersection found
+                break
+
+        slow2 = 0
+        while True:
+            slow = nums[slow]
+            slow2 = nums[slow2]
+            if slow == slow2:
+                return slow
+```
+key point: Floyd algorithm for loop detection, just need to memorize the algorithm, no way to derive it during interview
+
+
+
+
 
 
 
