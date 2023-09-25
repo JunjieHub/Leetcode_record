@@ -276,6 +276,12 @@ class Solution:
             stack.append([temperatures[i], i])
         return res
 ```
+## Car Fleet
+[! Car Fleet](https://leetcode.com/problems/car-fleet/)
+key point: this problem is complex but if we transform the problem as a time of arrival problem, it is much clear.
+Hard to solve it if I have never seen this problem before.
+
+
 
 ## The following are examples for backtracking using template
 ## Subsets
@@ -859,7 +865,96 @@ class Solution:
 ```
 key point: Floyd algorithm for loop detection, just need to memorize the algorithm, no way to derive it during interview
 
+## LRU Cache
+[LRU Cache](https://leetcode.com/problems/lru-cache/)
+```python
+class LRUCache:
 
+    def __init__(self, capacity: int):
+        self.cache = OrderedDict()
+        self.capacity = capacity
+        self.least_recent_key = None
+
+
+    def get(self, key: int) -> int:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+            return self.cache[key]
+        else:
+            return -1
+
+        
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            # update the value and move the key to last
+            self.cache[key] = value
+            self.cache.move_to_end(key)
+        else:
+            self.cache[key] = value
+        
+        if len(self.cache) > self.capacity:
+            self.cache.popitem(last = False)
+        
+
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
+```
+key point: this problem relay on doubled linked list, we need to understand remove and insert operation in double linked list.
+Also, python collection orderedDict use linked list, it has function move_to_end and popitem, which is very useful for this problem.
+
+##  Merge k Sorted Lists
+[ Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        k = len(lists)
+        if k == 0:
+            return None
+        if k == 1:
+            return lists[0]
+
+        while len(lists) > 1:
+            mergedLists = []
+            k = len(lists)
+            for i in range(0,k,2):
+                l1 = lists[i]
+                l2 = lists[i+1] if (i+1)<k else None
+                mergedLists.append(self.mergeTwoLists(l1,l2))
+                # print(prev)
+            lists = mergedLists
+        return lists[0]
+
+
+
+
+
+    def mergeTwoLists(self, list1: ListNode, list2: ListNode) -> ListNode:
+        dummy = node = ListNode()
+
+        while list1 and list2:
+            if list1.val < list2.val:
+                node.next = list1
+                list1 = list1.next
+            else:
+                node.next = list2
+                list2 = list2.next
+            node = node.next
+
+        node.next = list1 or list2
+
+        return dummy.next
+```
+key point: once we can write merge two sorted linked list as a helper function, this problem becomes easy, since we can repeatedly merge two linked list
+
+## 
 
 
 
