@@ -954,7 +954,60 @@ class Solution:
 ```
 key point: once we can write merge two sorted linked list as a helper function, this problem becomes easy, since we can repeatedly merge two linked list
 
-## 
+# examples of tree
+
+## Invert Binary Tree
+[Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)
+```python
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return
+
+        temp = root.left
+        root.left = root.right
+        root.right = temp
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+
+        return root
+```
+key point: this is a recursive problem, we can use dfs to solve it, the key point is to swap left and right child of each node
+
+## Maximum Depth of Binary Tree
+[Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+
+### dfs solution
+```python
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        return 1 + max(self.maxDepth(root.right), self.maxDepth(root.left))
+```
+### bfs solution
+```python
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        q = deque([root])
+        res = 0
+        while q:
+            res += 1
+            for _ in range(len(q)):
+                node = q.popleft()
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+        return res
+```
+
+
+
+
+
 
 
 
