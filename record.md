@@ -1004,6 +1004,52 @@ class Solution:
         return res
 ```
 
+## Validate Binary Search Tree
+[Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)
+```python
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        # dfs
+        def dfs(r, min_val, max_val):
+            if not r:
+                return True
+            if r.val <= min_val or r.val >= max_val:
+                return False
+            else:
+                return dfs(r.left, min_val, r.val) and dfs(r.right, r.val, max_val)
+        
+        min_val = float('-infinity')
+        max_val = float('infinity')
+
+        return dfs(root, min_val, max_val)
+```
+key point: this is a dfs problem, we need to pass min and max value to each node, and check if the node value is in the range of min and max value (i do it all by myself :))
+
+## Kth Smallest Element in a BST
+[Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
+```python
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        # in order dfs
+        
+        stack = [] # store the unprocessed node, use LIFO style, then we can achieve inorder dfs search, without recursive
+        cur = root
+        count = 0
+        while cur or stack:
+            # add the most left node in stack
+            while cur:
+                stack.append(cur)
+                cur = cur.left
+            cur = stack.pop()
+            count += 1
+            if count == k:
+                return cur.val
+            cur = cur.right
+```
+key point: this is an important problem, it basically show how we can transform a binary tree to a sorted array. the standard appraoch is to use inorder dfs traversal, which is a dfs approach. We utilize a stack to implement LIFO, and we use a while loop to traverse the tree. The key point is to understand how to use stack to implement dfs traversal.
+
+
+
 
 
 
