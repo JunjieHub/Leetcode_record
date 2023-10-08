@@ -1048,6 +1048,33 @@ class Solution:
 ```
 key point: this is an important problem, it basically show how we can transform a binary tree to a sorted array. the standard appraoch is to use inorder dfs traversal, which is a dfs approach. We utilize a stack to implement LIFO, and we use a while loop to traverse the tree. The key point is to understand how to use stack to implement dfs traversal.
 
+## Construct Binary Tree from Inorder and Postorder Traversal
+[Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
+```python
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        # the first element for the preorder is always the root
+        # once we found the root, we identify the location (mid) of that root in the inoder list
+        # all elements in the left part of mid will belong to left subtree and all elements in the 
+        # right part will belong to right subtree
+
+        if not preorder:
+            return
+        
+        root = TreeNode(val = preorder[0])
+        mid = inorder.index(preorder[0])
+        root.left = self.buildTree(preorder[1:mid+1], inorder[:mid])
+        root.right = self.buildTree(preorder[mid+1:], inorder[mid+1:])
+
+        return root
+
+        # this consise code utilize a trick to avoid the edge cases
+        # e.g. a = [3] 
+        # a[1] -> error
+        # a[1:] -> []
+```
+key point: this is a recursive problem, we can use dfs to solve it. The key point is using the index of root in the inorder list as a divider to divide the inorder list into left and right subtree. Then we can recursively build the tree.
+
 
 
 
