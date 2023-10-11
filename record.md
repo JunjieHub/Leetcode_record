@@ -1076,6 +1076,53 @@ class Solution:
 key point: this is a recursive problem, we can use dfs to solve it. The key point is using the index of root in the inorder list as a divider to divide the inorder list into left and right subtree. Then we can recursively build the tree.
 
 
+## Binart Tree Maximum Path Sum
+[Binart Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        
+        # use a list make we can modify it, and it serve as a global variable
+        res = [root.val]
+        def dfs(root):
+            '''
+            the dfs return the maxSumpath of its left and right subtree or do not include any subtree
+            inside the dfs loop, we update the global result by considering the path
+            1) do not include any subtree of rrot
+            2) include the maxSumPath between left and right subtree
+            3) include both left and right subtree
+            '''
+            # return the maxSum of the root's left and right subtree
+            if not root:
+                return 0
+            left_val = root.left.val if root.left else 0
+            right_val = root.right.val if root.right else 0
+
+            leftMax = dfs(root.left)
+            rightMax = dfs(root.right)
+
+            temp = max(leftMax+left_val, rightMax+right_val, 0)
+
+            res[0] = max(
+                    root.val,
+                    root.val + temp,
+                    root.val + left_val + leftMax + right_val + rightMax,
+                    res[0]
+                    )
+            return temp
+        dfs(root)
+        return res[0]
+```
+key point: this is a dfs problem, just need to design clearly what is the return value of dfs and setup a global variable that can be updated during dfs traverse process.
+a trick:
+use res = [root.val] then the res can be modified inside the dfs function, so we don't need speciy nonlocal res in the dfs function.
+
 
 
 
