@@ -1123,7 +1123,87 @@ key point: this is a dfs problem, just need to design clearly what is the return
 a trick:
 use res = [root.val] then the res can be modified inside the dfs function, so we don't need speciy nonlocal res in the dfs function.
 
+## the following are heap examples
+## Kth Largest Element in a Stream
+[Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/)
+```python
+class KthLargest:
 
+    def __init__(self, k: int, nums: List[int]):
+        ## use minheap to store the nums, the size of heap is k
+        self.q = nums
+        self.k = k
+
+        heapq.heapify(self.q)
+
+        while len(self.q) > k:
+            heapq.heappop(self.q)
+       
+
+    def add(self, val: int) -> int:
+        heapq.heappush(self.q, val)
+        if len(self.q) > self.k:
+            heapq.heappop(self.q)
+        return self.q[0]
+```
+## Last Stone Weight
+[Last Stone Weight](https://leetcode.com/problems/last-stone-weight/)
+```python
+class Solution:
+    def lastStoneWeight(self, stones: List[int]) -> int:
+        if len(stones) == 1:
+            return stones[0]
+        # we want to use maxheap, but the default is minheap, adding a negtive sign can do the trick
+        stones = [-s for s in stones]
+        heapq.heapify(stones)
+        while len(stones)>1:
+            # print(stones)
+            s1 = heapq.heappop(stones)
+            s2 = heapq.heappop(stones)
+            if s1 == s2:
+                pass
+            else:
+                remain = abs(s1-s2)
+                heapq.heappush(stones, -remain)
+        return -stones[0] if stones else 0
+```
+## K Closest Points to Origin
+[K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
+```python
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        # calculate distance for each points
+        distance = [-(p[0]**2+p[1]**2) for p in points]
+        # creata tuple to conect distances and points
+        minheap = []
+        for i in range(len(distance)):
+            minheap.append((distance[i], points[i][0], points[i][1]))
+        heapq.heapify(minheap)
+
+        while len(minheap)>k:
+            t = heapq.heappop(minheap)
+
+        res = []
+        for t in minheap:
+            res.append([t[1],t[2]])
+        return res
+```
+
+## Kth Largest Element in an Array
+[Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+```python
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        heapq.heapify(nums)
+        while len(nums)>k:
+            heapq.heappop(nums)
+        return nums[0]
+```
+
+keypoints and trick
+1. use heapq.heapify to convert a list into a heap
+2. python's default heap is minheap, so if we want to use maxheap, we can add a negative sign to the elements in the list
+3. for the problem that we want to find the kth largest element, heap is the best choice
 
 
 
