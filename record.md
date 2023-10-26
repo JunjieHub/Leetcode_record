@@ -1205,6 +1205,104 @@ keypoints and trick
 2. python's default heap is minheap, so if we want to use maxheap, we can add a negative sign to the elements in the list
 3. for the problem that we want to find the kth largest element, heap is the best choice
 
+## 2D dynamic programming
+## Best Time to Buy and Sell Stock
+[Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        dp = {}
+        # hashmap: key(i,tobuy) -> maxprofit start from day i
+
+        # dfs return the maxprofit at day 1
+        def dfs(i, tobuy):
+            if i >= len(prices):
+                return 0
+            if (i, tobuy) in dp:
+                return dp[(i,tobuy)]
+            
+            if tobuy:
+                profit_buy = dfs(i+1, False) - prices[i]
+                profit_cooldown = dfs(i+1, True)
+                max_profit = max(profit_buy, profit_cooldown)
+            
+            else:
+                profit_cooldown = dfs(i+1, False)
+                profit_sell = dfs(i+2, True) + prices[i]
+                max_profit = max(profit_sell, profit_cooldown)
+
+            # update dp
+            dp[(i,tobuy)] = max_profit
+            return max_profit
+        
+        return dfs(0, True)
+```
+keypoints and tricks:
+general: this is an interesting problem include multiple tricks:
+1. for stock buy and sell, we can view as decision tree, where when we buy we deduct the price, when we sell we add the price
+2. this is 2D DP problem since the corresponding state should include the current day and also the tobuy variable. because we we have the choice to buy -> we can chose to sell or cooldown. But when we do not have the choice to buy, we can chose to sell or cooldown.
+3. insight: it is not a bad idea to start with full decision tree, and then think about how we can reduce the time complexity by memorization or dp
+   
+## Coin Change II
+[Coin Change ii](https://leetcode.com/problems/coin-change-ii/)
+I felt this hard since i can capture the big picture, but implemnet the code especially the dp table is hard for me.
+Important: The mistake I've made is using dfs without pruning will lead to wrong answer since i can have the same combination even though they are generated from different path.
+e.g. amount = 5, coins = [1,2,5]
+5: 1-2-2 , 5: 2-1-1
+they are the same combinations but will be counted twice if we use dfs without pruning.
+the idea is in the dfs, we consider an extra argument which is starting from which coin, so we can avoid the duplicate combinations.
+
+## dfs: this is correct but won't be able to pass the test because of time limit
+```python
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        
+        res = [0]
+        def dfs(a, ci):
+            # print('a',a)
+            # print('ci',ci)
+            if ci >= len(coins):
+                return
+            if a < 0:
+                return
+            if a == 0:
+                res[0] += 1
+
+            for i in range(ci,len(coins)):
+                dfs(a-coins[i], i)
+
+        dfs(amount, 0)
+        return res[0]
+```
+
+## memoization: this is correct and can pass the test
+```python
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        cache = {}
+        def dfs(a, ci):
+            # return the way of combination given given amount a and coins start with index ci
+            if a == amount:
+                return 1
+            if ci >= len(coins):
+                return 0
+            if a > amount:
+                return 0
+
+            if (a,ci) in cache:
+                return cache[(a,ci)]
+
+            # update
+            temp = dfs(coins[ci]+a, ci) + dfs(a, ci+1)
+            cache[(a,ci)] = temp
+            return temp
+        
+        return dfs(0,0)
+```
+
+## 2D dp table: TBD next time when my brain is clear
+
+
 
 
 
