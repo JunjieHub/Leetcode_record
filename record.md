@@ -1303,6 +1303,89 @@ class Solution:
 ## 2D dp table: TBD next time when my brain is clear
 
 
+# greedy algorithm
+## Jump Game
+[Jump Game](https://leetcode.com/problems/jump-game/)
+```python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        # greedy
+        goal = len(nums)-1
+        for i in range(len(nums)-1,-1,-1):
+            if i+nums[i]>=goal:
+                goal = i
+                # once we can reach to i, we can definetly reach to the final destination
+        return goal == 0
+```
+keypoints and tricks:
+1. greedy algorithm: we can start from the end of the array, and check if we can reach to the current index from the previous index. If we can reach to the current index, we can update the goal to the current index. If we can reach to the goal, we can definetly reach to the final destination.
+
+## gas station
+[Gas Station](https://leetcode.com/problems/gas-station/)
+```python
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        if sum(gas) < sum(cost):
+            return -1
+        
+        diff = [gas[i]-cost[i] for i in range(len(gas))]
+        res = 0
+        remain = 0
+        for i in range(len(gas)):
+            remain += diff[i]
+            if remain < 0:
+                remain = 0
+                res = i + 1
+        return res
+```
+keypoints and tricks:
+this is hard to figureout, I can use brute force which requre n2 time complexity, i will have time limit exceed error.
+The trick is even though the station is in a circle, we don't necesarily return to the first station when we appraoch to the boundary.
+We start from the first station, once we found any station that is not reachable, we confirm we can not start from any station between the first and the unreachable station. So we try start at the next station and resume the tank value to next station's gas value.
+
+## Hand of stright
+[Hand of stright](https://leetcode.com/problems/hand-of-straights/)
+```python
+class Solution:
+    def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
+        if len(hand) % groupSize:
+            return False
+
+        count = Counter(hand)
+        # preserve a minheap for conveniently pop the smallest element
+        minheap = list(count.keys())
+        heapq.heapify(minheap)
+        # print(minheap)
+        while minheap:
+            # print(minheap)
+            # print(count)
+            start = minheap[0]
+            for i in range(start, start+groupSize):
+                # print(i)
+                if i in count:
+                    count[i] -= 1
+                else:
+                    return False
+                
+                if count[i] == 0:
+                    if i != minheap[0]:
+                        return False
+                    heapq.heappop(minheap)
+            
+        return True
+```
+keypoints and tricks:
+the key point is we always statr with the min value, and then we check if we can form a group of consecutive numbers. 
+since we always start with the min value, we can use minheap to store the min value, and then we can pop the min value from the heap and check if we can form a group of consecutive numbers.
+
+
+
+
+
+
+
+
+
 
 
 
