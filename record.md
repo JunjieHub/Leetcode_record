@@ -1378,6 +1378,131 @@ keypoints and tricks:
 the key point is we always statr with the min value, and then we check if we can form a group of consecutive numbers. 
 since we always start with the min value, we can use minheap to store the min value, and then we can pop the min value from the heap and check if we can form a group of consecutive numbers.
 
+## Graph example
+### topological sort
+[Course Schedule](https://leetcode.com/problems/course-schedule-ii/)
+```python
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+       # initialize a dictionary to represents the DAG graph
+       # NextMap (node, course that require node as prerequiste)
+        NextMap = {i:[] for i in range(numCourses)}
+        for c, p in prerequisites:
+            NextMap[p].append(c)
+       
+       # indegree
+        indegree = [0] * numCourses
+        for c, p in prerequisites:
+           indegree[c] += 1
+        # print(indegree)
+
+        # queue to save all nodes with 0 indegree
+        queue = []
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                queue.append(i)
+
+        while queue:
+            # pop a node
+            node = queue.pop(0)
+            for adj in NextMap[node]:
+                indegree[adj] -= 1
+                if indegree[adj] == 0:
+                    queue.append(adj)
+        return sum(indegree) == 0       
+```
+
+[Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
+```python
+class Solution:
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+
+       # initialize a dictionary to represents the DAG graph
+       # NextMap (node, course that require node as prerequiste)
+        NextMap = {i:[] for i in range(numCourses)}
+        for c, p in prerequisites:
+            NextMap[p].append(c)
+       
+       # indegree
+        indegree = [0] * numCourses
+        for c, p in prerequisites:
+           indegree[c] += 1
+        # print(indegree)
+
+        # queue to save all nodes with 0 indegree
+        queue = []
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                queue.append(i)
+
+        res = []
+        while queue:
+            # pop a node
+            node = queue.pop(0)
+            res.append(node)
+            for adj in NextMap[node]:
+                indegree[adj] -= 1
+                if indegree[adj] == 0:
+                    queue.append(adj)
+
+        if sum(indegree) > 0:
+            return []
+        else:
+            return res     
+```
+
+[safe state](https://leetcode.com/problems/find-eventual-safe-states/)
+```python
+class Solution:
+    def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
+        # seems i can use a outdegree queue
+        n = len(graph)
+        outdegree = [0] * n
+        for i in range(n):
+            outdegree[i] = len(graph[i])
+
+        queue = []
+        for i in range(n):
+            if outdegree[i] == 0:
+                queue.append(i)
+
+        # create a PreMap for conveniency
+        PreMap = {i:[] for i in range(n)}
+        for node in range(n):
+            for nxt in graph[node]:
+                PreMap[nxt].append(node)
+
+
+        res = []
+        while queue:
+            node = queue.pop(0)
+            res.append(node)
+            for pre in PreMap[node]:
+                outdegree[pre] -= 1
+                if outdegree[pre] == 0:
+                    queue.append(pre)
+        res.sort()
+        return res
+```
+
+the above three problems are all topological sort problems. Refer to the topics/topological_sort.md for more details.
+
+
+
+                
+            
+
+
+        
+
+                    
+            
+        
+
+
+   
+                
+            
 
 
 
