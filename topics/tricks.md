@@ -39,3 +39,32 @@ This is actually a hard problem and require greedy algorithm to solve. Suppose o
 we want to continuously increase the reachable value until it cover the target
 1) if the current coin <= reachable+1, adding the coin help increasing the reachable
 2) if not, we must add the reachable+1 as a new coin, we need to update the reachabel accordingly
+
+
+## Count Complete Substrings
+You are given a string word and an integer k.
+
+A substring s of word is complete if:
+
+Each character in s occurs exactly k times.
+The difference between two adjacent characters is at most 2. That is, for any two adjacent characters c1 and c2 in s, the absolute difference in their positions in the alphabet is at most 2.
+Return the number of complete substrings of word.
+
+A substring is a non-empty contiguous sequence of characters in a string.
+
+ 
+
+Example 1:
+
+Input: word = "igigee", k = 2
+Output: 3
+Explanation: The complete substrings where each character appears exactly twice and the difference between adjacent characters is at most 2 are: igigee, igigee, igigee.
+Example 2:
+
+Input: word = "aaabbbccc", k = 3
+Output: 6
+Explanation: The complete substrings where each character appears exactly three times and the difference between adjacent characters is at most 2 are: aaabbbccc, aaabbbccc, aaabbbccc, aaabbbccc, aaabbbccc, aaabbbccc.
+
+trick: when deal with problem that has a bottom limit, e.g. lower case letter only have 26, so we can deal with (1,26) unique number of letter which will simplify the problem a lot, especially when design the updating rule of slinding window.
+
+
